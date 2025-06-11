@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tài khoản</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="top-bar">
+        <span>Miễn phí giao hàng toàn quốc</span>
+        <div id="user-links">
+            <a href="giohang.html">Giỏ hàng <span id="cart-count">0</span></a>
+            <a href="dangky.html" id="register-link">Đăng ký</a>
+            <a href="dangnhap.html" id="login-link">Đăng nhập</a>
+        </div>
+    </div>
+
+    <header>
+        <a href="trangchu.html" class="logo"></a>
+    </header>
+
+    <main>
+        <div class="customer-container">
+            <div class="customer-sidebar">
+                <div class="customer-info">
+                    <div class="avatar"></div>
+                    <h3 id="customer-name">Khách hàng</h3>
+                </div>
+                <ul class="menu">
+                    <li class="menu-item active" onclick="showSection('info')">Thông tin</li>
+                    <li class="menu-item" onclick="showSection('order')">Lịch sử mua hàng</li>
+                </ul>
+                <button class="back-home" onclick="window.location.href='trangchu.html'">Quay lại trang chủ</button>
+            </div>
+
+            <div class="customer-content">
+                <div class="content-section" id="info-section">
+                    <h2>Thông tin tài khoản</h2>
+                    <p>Email/Số điện thoại: <span id="customer-email"></span></p>
+                    <p>Tên tài khoản: <span id="customer-username"></span></p>
+                    <h3>Đổi mật khẩu</h3>
+                    <div class="form-group">
+                        <input type="password" id="matkhau-moi" placeholder="Mật khẩu mới">
+                        <input type="password" id="nhaplai-matkhau" placeholder="Nhập lại mật khẩu">
+                        <button onclick="capnhatmatkhau()">Cập nhật mật khẩu</button>
+                    </div>
+                    <h3>Thông tin bổ sung</h3>
+                    <div class="form-group">
+                        <input type="text" id="customer-address" placeholder="Địa chỉ giao hàng">
+                        <input type="tel" id="customer-phone" placeholder="Số điện thoại liên hệ">
+                        <button onclick="updateCustomerInfo()">Cập nhật thông tin</button>
+                    </div>
+                </div>
+                <div class="content-section" id="order-section" style="display: none;">
+                    <h2>Lịch sử mua hàng</h2>
+                    <div class="order-list"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2025 MUANHANH. Liên hệ: 0794-109-345 | Email: muanhanh@gmail.com</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="kiemtra.js"></script>
+    <script>
+        function showSection(section) {
+            document.querySelectorAll('.content-section').forEach(s => s.style.display = 'none');
+            document.getElementById(`${section}-section`).style.display = 'block';
+            document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+            document.querySelector(`.menu-item[onclick="showSection('${section}')"]`).classList.add('active');
+        }
+
+        function updateCustomerInfo() {
+            const address = document.getElementById('customer-address').value;
+            const phone = document.getElementById('customer-phone').value;
+            const dinhdangsodienthoai = /^[0-9]{10}$/;
+            if (phone && !dinhdangsodienthoai.test(phone)) {
+                hienthithongbao("Số điện thoại không hợp lệ!", 1000, "error");
+                return;
+            }
+            localStorage.setItem('customer-address', address);
+            localStorage.setItem('customer-phone', phone);
+            hienthithongbao("Cập nhật thông tin thành công!", 1000, "success");
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            kiemtratrangthaidangnhap();
+            const email = localStorage.getItem('emailsodienthoai');
+            const name = localStorage.getItem('tentaikhoan');
+            const address = localStorage.getItem('customer-address') || '';
+            const phone = localStorage.getItem('customer-phone') || '';
+            document.getElementById('customer-email').textContent = email || 'Chưa đăng nhập';
+            document.getElementById('customer-username').textContent = name || 'Khách hàng';
+            document.getElementById('customer-name').textContent = name || 'Khách hàng';
+            document.getElementById('customer-address').value = address;
+            document.getElementById('customer-phone').value = phone;
+            renderOrderHistory();
+        });
+    </script>
+</body>
+</html>

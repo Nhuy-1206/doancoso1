@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang chủ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="top-bar">
+        <span>Miễn phí giao hàng toàn quốc</span>
+        <div id="user-links">
+            <a href="giohang.html">Giỏ hàng <span id="cart-count">0</span></a>
+            <a href="dangky.html" id="register-link">Đăng ký</a>
+            <a href="dangnhap.html" id="login-link">Đăng nhập</a>
+        </div>
+    </div>
+
+    <header>
+        <a href="trangchu.html" class="logo"></a>
+        <div class="search-bar">
+            <input type="text" placeholder="Tìm kiếm sản phẩm...">
+            <button>Tìm</button>
+        </div>
+    </header>
+
+    
+
+    <div class="hero"></div>
+<nav class="navbar">
+        <a  onclick="renderProducts(null, '', 'Áo')">Áo</a>
+        <a  onclick="renderProducts(null, '', 'Quần')">Quần</a>
+        <a  onclick="renderProducts(null, '', 'Váy')">Váy</a>
+        <a  onclick="renderProducts(null, '', 'Giày')">Giày</a>
+        <a  onclick="renderProducts(null, '', 'Phụ kiện')">Phụ kiện</a>
+    </nav>
+    <div class="section">
+        <h2 id="section-title">Sản phẩm nổi bật</h2>
+        <div class="filter-bar">
+            <select onchange="renderProducts(this.value)"  >
+                <option hidden disabled selected value="">Lọc</option>
+                <option value="">Tất cả</option>
+                <option value="under150">$</option>
+                <option value="150to300">$$</option>
+                <option value="300to500">$$$</option>
+                <option value="over500">$$$$</option>
+            </select>
+        </div>
+        <div class="product-list"></div>
+    </div>
+
+    <footer>
+        <p>© 2025 MUANHANH. Liên hệ: 0794-109-345 | Email: muanhanh@gmail.com</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="kiemtra.js"></script>
+    <script src="products.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            kiemtratrangthaidangnhap();
+            renderProducts();
+            document.querySelector('.search-bar button').addEventListener('click', () => {
+                const query = document.querySelector('.search-bar input').value;
+                renderProducts(null, query);
+            });
+            document.querySelector('.search-bar input').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const query = e.target.value;
+                    renderProducts(null, query);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

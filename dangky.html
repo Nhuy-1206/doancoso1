@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUANHANH - Đăng ký</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main>
+        <div class="modal">
+            <div class="modal-content">
+                <span class="modal-close" onclick="window.location.href='trangchu.html'">×</span>
+                <div class="auth-form">
+                    <h2>Đăng ký</h2>
+                    <form onsubmit="return kiemtradulieu()">
+                        <input type="text" id="tentaikhoan" placeholder="Tên tài khoản" required>
+                        <input type="text" id="emailsodienthoai" placeholder="Email hoặc số điện thoại" required>
+                        <input type="password" id="matkhau" placeholder="Mật khẩu" required>
+                        <input type="password" id="nhaplaimatkhau" placeholder="Nhập lại mật khẩu" required>
+                        <button type="submit">Đăng ký</button>
+                    </form>
+                    <p>Đã có tài khoản? <a href="dangnhap.html">Đăng nhập</a></p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script src="kiemtra.js"></script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giỏ hàng</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="top-bar">
+        <span>Miễn phí giao hàng toàn quốc</span>
+        <div id="user-links">
+            <a href="giohang.html">Giỏ hàng <span id="cart-count">0</span></a>
+            <a href="dangky.html" id="register-link">Đăng ký</a>
+            <a href="dangnhap.html" id="login-link">Đăng nhập</a>
+        </div>
+    </div>
+
+    <header>
+        <a href="index.html" class="logo"></a>
+        <div class="search-bar">
+            <input type="text" id="cart-search" placeholder="Tìm kiếm trong giỏ hàng...">
+            <button onclick="searchCart()">Tìm</button>
+        </div>
+    </header>
+<main>
+    <div class="cart-wrapper">
+        <h2>Giỏ hàng của bạn</h2>
+        <button class="clear-cart-btn">Xóa tất cả</button>
+        <div class="cart-items"></div>
+        <div class="cart-empty" style="display: none;">Giỏ hàng trống</div>
+        <a href="index.html">Tiếp tục mua sắm</a>
+        
+    </div>
+
+    <div class="cart-footer">
+        <input type="checkbox" id="select-all"> Chọn tất cả
+        <p id="cart-footer-info">Số lượng: 0 | Tổng: 0đ</p>
+        <button class="checkout-btn">Thanh toán</button>
+    </div>
+</main>
+    <footer>
+        <p>© 2025 MUANHANH. Liên hệ: 0794-109-345 | Email: muanhanh@gmail.com</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="kiemtra.js"></script>
+    <script>
+        function renderCart(searchQuery = '') {
+            const cartItems = document.querySelector('.cart-items');
+            const cartEmpty = document.querySelector('.cart-empty');
+            let cart = JSON.parse(localStorage.getItem(getCartKey()) || "[]");
+            
+            // Lọc theo tìm kiếm trong giỏ
+            if (searchQuery) {
+                cart = cart.filter(item => 
+                    item.name.toLowerCase().includes(searchQuery.toLowerCase())
+                );
+            }
+
+            // Cập nhật cart-footer
+            const selectedItems = cart.filter(item => item.selected);
+            const totalQuantity = selectedItems.reduce((sum, item) => sum + item.quantity, 0);
+            const totalPrice = selectedItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+            document.getElementById('cart-footer-info').textContent = 
+                `Số lượng: ${totalQuantity} | Tổng: ${totalPrice.toLocaleString()}đ`;
+
+            // Hiển thị giỏ hàng
+            if (cart.length === 0) {
+                cartItems.style.display = 'none';
+                cartEmpty.style.display = 'block';
+                return;
+            }
+            cartItems.style.display = 'block';
+            cartEmpty.style.display = 'none';
+            cartItems.innerHTML = cart.map((item, index) => `
+                <div class="cart-item">
+                    <input type="checkbox" ${item.selected ? 'checked' : ''} onchange="toggleSelectItem(${index}, this.checked)">
+                    <img src="${item.image}" alt="${item.name}">
+                    <label>${item.name}</label>
+                    <span>${item.price.toLocaleString()}đ</span>
+                    <input type="number" value="${item.quantity}" min="1" onchange="updateCartItemQuantity(${index}, this.value)">
+                    <button class="remove-btn" onclick="removeFromCart(${index})">Xóa</button>
+                </div>
+            `).join('');
+        }
+
+        function searchCart() {
+            const query = document.getElementById('cart-search').value;
+            renderCart(query);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            kiemtratrangthaidangnhap();
+            renderCart();
+            document.querySelector('.clear-cart-btn').addEventListener('click', clearCart);
+            document.querySelector('.checkout-btn').addEventListener('click', checkout);
+            document.querySelector('#select-all').addEventListener('change', (e) => toggleSelectAll(e.target.checked));
+            document.getElementById('cart-search').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    searchCart();
+                }
+            });
+
+            // Điều chỉnh cart-footer dựa trên footer
+            const footer = document.querySelector('footer');
+            const cartFooter = document.querySelector('.cart-footer');
+            window.addEventListener('scroll', () => {
+                const footerRect = footer.getBoundingClientRect();
+                const viewportHeight = window.innerHeight;
+                if (footerRect.top <= viewportHeight) {
+                    cartFooter.classList.add('above-footer');
+                } else {
+                    cartFooter.classList.remove('above-footer');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
